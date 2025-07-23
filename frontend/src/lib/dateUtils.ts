@@ -21,12 +21,12 @@ export function formatDateForDisplay(dateString: string): string {
   const [year, month, day] = dateString.split('-').map(Number);
   // Create a Date object in local timezone (month is 0-indexed)
   const date = new Date(year, month - 1, day);
-  
+
   return date.toLocaleDateString('en-US', {
     weekday: 'long',
     year: 'numeric',
     month: 'long',
-    day: 'numeric'
+    day: 'numeric',
   });
 }
 
@@ -36,7 +36,7 @@ export function formatDateForDisplay(dateString: string): string {
  */
 export function formatTimestampForDisplay(utcTimestamp: string): string {
   const date = new Date(utcTimestamp);
-  
+
   return date.toLocaleString('en-US', {
     year: 'numeric',
     month: 'short',
@@ -44,6 +44,6 @@ export function formatTimestampForDisplay(utcTimestamp: string): string {
     hour: 'numeric',
     minute: '2-digit',
     hour12: true,
-    timeZoneName: 'short'
+    timeZoneName: 'short',
   });
 }

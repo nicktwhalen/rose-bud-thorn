@@ -23,7 +23,7 @@ export function useEntryExists(date: string) {
     // Check cache first
     const cached = entryExistsCache.get(date);
     const now = Date.now();
-    
+
     if (cached && now - cached.timestamp < CACHE_DURATION) {
       console.log(`[useEntryExists] Cache hit for date: ${date}`);
       setExists(cached.exists);
@@ -38,24 +38,24 @@ export function useEntryExists(date: string) {
 
     const checkEntry = async () => {
       console.log(`[useEntryExists] Making API request for date: ${date}`);
-      
+
       // Update cache with loading state
       entryExistsCache.set(date, { exists: null, loading: true, timestamp: now });
       setLoading(true);
       setExists(null);
-      
+
       // Create new abort controller for this request
       const controller = new AbortController();
       activeRequestRef.current = controller;
-      
+
       try {
         const response = await fetch(getEntriesUrl(date), {
           headers: getAuthHeaders(),
           signal: controller.signal,
         });
-        
+
         const existsResult = response.ok;
-        
+
         // Update cache with result
         entryExistsCache.set(date, { exists: existsResult, loading: false, timestamp: now });
         setExists(existsResult);

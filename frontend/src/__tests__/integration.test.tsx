@@ -1,14 +1,14 @@
-import { render, screen, waitFor } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-import Home from '@/app/page'
-import History from '@/app/history/page'
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import Home from '@/app/page';
+import History from '@/app/history/page';
 
 // Mock the auth context
 jest.mock('@/contexts/AuthContext', () => ({
   useAuth: () => ({
     user: {
       id: 'test-user-id',
-      googleId: 'test-google-id', 
+      googleId: 'test-google-id',
       email: 'test@example.com',
       name: 'Test User',
       picture: 'https://example.com/avatar.jpg',
@@ -42,34 +42,32 @@ jest.mock('@/hooks/useEntryExists', () => ({
     exists: false,
     loading: false,
   })),
-}))
+}));
 
 // Mock next/link
 jest.mock('next/link', () => {
-  const MockLink = ({ children, href }: { children: React.ReactNode; href: string }) => (
-    <a href={href}>{children}</a>
-  )
-  MockLink.displayName = 'MockLink'
-  return MockLink
-})
+  const MockLink = ({ children, href }: { children: React.ReactNode; href: string }) => <a href={href}>{children}</a>;
+  MockLink.displayName = 'MockLink';
+  return MockLink;
+});
 
-const mockFetch = jest.fn()
-global.fetch = mockFetch
+const mockFetch = jest.fn();
+global.fetch = mockFetch;
 
 describe('Integration Tests', () => {
   beforeEach(() => {
-    mockFetch.mockClear()
+    mockFetch.mockClear();
     // Set up localStorage with a test token for auth headers
-    localStorage.setItem('token', 'test-jwt-token')
-  })
+    localStorage.setItem('token', 'test-jwt-token');
+  });
 
   afterEach(() => {
-    localStorage.clear()
-  })
+    localStorage.clear();
+  });
 
   it('completes full entry creation workflow', async () => {
-    const user = userEvent.setup()
-    
+    const user = userEvent.setup();
+
     // Mock successful API responses
     mockFetch.mockResolvedValueOnce({
       ok: true,
@@ -80,75 +78,76 @@ describe('Integration Tests', () => {
         thorn: 'Long meeting',
         bud: 'Weekend plans',
       }),
-    })
+    });
 
-    render(<Home />)
+    render(<Home />);
 
     // Verify we're on the entry creation page
-    expect(screen.getByText('Daily Reflection')).toBeInTheDocument()
-    expect(screen.getByText('🌹 Your Rose')).toBeInTheDocument()
+    expect(screen.getByText('Daily Reflection')).toBeInTheDocument();
+    expect(screen.getByText('🌹 Your Rose')).toBeInTheDocument();
 
     // Fill out rose
-    const roseTextarea = screen.getByPlaceholderText('Share something that made you smile today...')
-    await user.type(roseTextarea, 'Great weather')
-    
+    const roseTextarea = screen.getByPlaceholderText('Share something that made you smile today...');
+    await user.type(roseTextarea, 'Great weather');
+
     // Navigate to thorn
-    await user.click(screen.getByText('Next'))
-    expect(screen.getByText('🌿 Your Thorn')).toBeInTheDocument()
-    
-    const thornTextarea = screen.getByPlaceholderText('It\'s okay to acknowledge the tough moments...')
-    await user.type(thornTextarea, 'Long meeting')
-    
+    await user.click(screen.getByText('Next'));
+    expect(screen.getByText('🌿 Your Thorn')).toBeInTheDocument();
+
+    const thornTextarea = screen.getByPlaceholderText("It's okay to acknowledge the tough moments...");
+    await user.type(thornTextarea, 'Long meeting');
+
     // Navigate to bud
-    await user.click(screen.getByText('Next'))
-    expect(screen.getByText('🌸 Your Bud')).toBeInTheDocument()
-    
-    const budTextarea = screen.getByPlaceholderText('What gives you hope for tomorrow?')
-    await user.type(budTextarea, 'Weekend plans')
-    
+    await user.click(screen.getByText('Next'));
+    expect(screen.getByText('🌸 Your Bud')).toBeInTheDocument();
+
+    const budTextarea = screen.getByPlaceholderText('What gives you hope for tomorrow?');
+    await user.type(budTextarea, 'Weekend plans');
+
     // Submit form
-    await user.click(screen.getByText('Complete Reflection'))
-    
+    await user.click(screen.getByText('Complete Reflection'));
+
     // Verify API was called correctly
     await waitFor(() => {
-      expect(mockFetch).toHaveBeenCalledWith('http://localhost:3001/api/entries', 
+      expect(mockFetch).toHaveBeenCalledWith(
+        'http://localhost:3001/api/entries',
         expect.objectContaining({
           method: 'POST',
           headers: {
-            'Authorization': 'Bearer test-jwt-token',
+            Authorization: 'Bearer test-jwt-token',
             'Content-Type': 'application/json',
           },
           body: expect.stringContaining('"rose":"Great weather"'),
-        })
-      )
-    })
-  })
+        }),
+      );
+    });
+  });
 
   it('handles navigation between steps correctly', async () => {
-    const user = userEvent.setup()
-    render(<Home />)
+    const user = userEvent.setup();
+    render(<Home />);
 
     // Start at step 1
-    expect(screen.getByText('🌹 Your Rose')).toBeInTheDocument()
-    
+    expect(screen.getByText('🌹 Your Rose')).toBeInTheDocument();
+
     // Previous button should be disabled
-    const prevButton = screen.getByText('Previous')
-    expect(prevButton).toHaveClass('cursor-not-allowed')
-    
+    const prevButton = screen.getByText('Previous');
+    expect(prevButton).toHaveClass('cursor-not-allowed');
+
     // Go to step 2
-    await user.click(screen.getByText('Next'))
-    expect(screen.getByText('🌿 Your Thorn')).toBeInTheDocument()
-    
+    await user.click(screen.getByText('Next'));
+    expect(screen.getByText('🌿 Your Thorn')).toBeInTheDocument();
+
     // Previous button should now be enabled
-    expect(prevButton).not.toHaveClass('cursor-not-allowed')
-    
+    expect(prevButton).not.toHaveClass('cursor-not-allowed');
+
     // Go back to step 1
-    await user.click(prevButton)
-    expect(screen.getByText('🌹 Your Rose')).toBeInTheDocument()
-    
+    await user.click(prevButton);
+    expect(screen.getByText('🌹 Your Rose')).toBeInTheDocument();
+
     // Previous button should be disabled again
-    expect(prevButton).toHaveClass('cursor-not-allowed')
-  })
+    expect(prevButton).toHaveClass('cursor-not-allowed');
+  });
 
   it('shows history page with entries', async () => {
     const mockEntries = [
@@ -161,44 +160,44 @@ describe('Integration Tests', () => {
         createdAt: '2025-07-18T10:00:00Z',
         updatedAt: '2025-07-18T10:00:00Z',
       },
-    ]
+    ];
 
     mockFetch.mockResolvedValueOnce({
       ok: true,
       json: async () => ({ entries: mockEntries, total: 1 }),
-    })
+    });
 
-    render(<History />)
+    render(<History />);
 
     // Should show loading initially
-    expect(screen.getByText('Loading your reflections...')).toBeInTheDocument()
+    expect(screen.getByText('Loading your reflections...')).toBeInTheDocument();
 
     // Wait for data to load
     await waitFor(() => {
-      expect(screen.getByText('Friday, July 18, 2025')).toBeInTheDocument()
-    })
+      expect(screen.getByText('Friday, July 18, 2025')).toBeInTheDocument();
+    });
 
     // Should show entry content
-    expect(screen.getByText('Beautiful day')).toBeInTheDocument()
-    expect(screen.getByText('Traffic jam')).toBeInTheDocument()
-    expect(screen.getByText('Family dinner')).toBeInTheDocument()
-  })
+    expect(screen.getByText('Beautiful day')).toBeInTheDocument();
+    expect(screen.getByText('Traffic jam')).toBeInTheDocument();
+    expect(screen.getByText('Family dinner')).toBeInTheDocument();
+  });
 
   it('handles form validation and encouragement', async () => {
-    const user = userEvent.setup()
-    render(<Home />)
+    const user = userEvent.setup();
+    render(<Home />);
 
     // Should show encouragement message
-    expect(screen.getAllByText('Every day has something beautiful, even if it\'s small')[0]).toBeInTheDocument()
+    expect(screen.getAllByText("Every day has something beautiful, even if it's small")[0]).toBeInTheDocument();
 
     // Can navigate through empty forms (fields are optional)
-    await user.click(screen.getByText('Next'))
-    expect(screen.getAllByText('Challenges help us grow and become stronger')[0]).toBeInTheDocument()
+    await user.click(screen.getByText('Next'));
+    expect(screen.getAllByText('Challenges help us grow and become stronger')[0]).toBeInTheDocument();
 
-    await user.click(screen.getByText('Next'))
-    expect(screen.getAllByText('Tomorrow holds new possibilities and opportunities')[0]).toBeInTheDocument()
+    await user.click(screen.getByText('Next'));
+    expect(screen.getAllByText('Tomorrow holds new possibilities and opportunities')[0]).toBeInTheDocument();
 
     // Should show submit button on final step
-    expect(screen.getByText('Complete Reflection')).toBeInTheDocument()
-  })
-})
+    expect(screen.getByText('Complete Reflection')).toBeInTheDocument();
+  });
+});

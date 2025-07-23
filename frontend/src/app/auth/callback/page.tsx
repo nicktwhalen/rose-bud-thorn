@@ -24,19 +24,19 @@ export default function AuthCallbackPage() {
     if (token) {
       processedRef.current = true;
       setIsProcessing(true);
-      
+
       // Store token temporarily and fetch user profile from secure endpoint
       const fetchUserProfile = async () => {
         try {
           console.log('Fetching user profile for auth token...');
-          
+
           // Store token temporarily in localStorage
           localStorage.setItem('token', token);
-          
+
           // Fetch user profile from secure backend endpoint
           const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/profile`, {
             headers: {
-              'Authorization': `Bearer ${token}`,
+              Authorization: `Bearer ${token}`,
               'Content-Type': 'application/json',
             },
           });
@@ -47,7 +47,7 @@ export default function AuthCallbackPage() {
 
           const user = await response.json();
           console.log('User profile fetched successfully, logging in...');
-          
+
           // Login with verified user data from backend
           login(token, user);
 
@@ -77,10 +77,7 @@ export default function AuthCallbackPage() {
             <div className="text-center">
               <div className="text-red-500 text-xl mb-4">⚠️ Authentication Error</div>
               <p className="text-gray-600 mb-4">{error}</p>
-              <button
-                onClick={() => router.push('/login')}
-                className="bg-rose-600 text-white px-4 py-2 rounded-lg hover:bg-rose-700 transition-colors duration-200"
-              >
+              <button onClick={() => router.push('/login')} className="bg-rose-600 text-white px-4 py-2 rounded-lg hover:bg-rose-700 transition-colors duration-200">
                 Try Again
               </button>
             </div>
@@ -97,9 +94,7 @@ export default function AuthCallbackPage() {
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-rose-600 mx-auto mb-4"></div>
             <p className="text-gray-600">Completing authentication...</p>
-            {isProcessing && (
-              <p className="text-sm text-gray-500 mt-2">Fetching your profile...</p>
-            )}
+            {isProcessing && <p className="text-sm text-gray-500 mt-2">Fetching your profile...</p>}
           </div>
         </div>
       </div>

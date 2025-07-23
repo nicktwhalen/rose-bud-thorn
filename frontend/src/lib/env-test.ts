@@ -8,9 +8,9 @@ export function testEnvVariables() {
   console.log('NEXT_PUBLIC_API_URL:', apiUrl);
   console.log('Expected:', 'http://localhost:3001');
   console.log('Match:', apiUrl === 'http://localhost:3001');
-  
+
   return {
     apiUrl,
-    isCorrect: apiUrl === 'http://localhost:3001'
+    isCorrect: apiUrl === 'http://localhost:3001',
   };
 }

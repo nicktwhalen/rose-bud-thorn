@@ -27,14 +27,14 @@ export function getEntriesUrl(path?: string): string {
 export function getAuthHeaders(includeContentType = false): Record<string, string> {
   const token = localStorage.getItem('token');
   const headers: Record<string, string> = {};
-  
+
   if (token) {
     headers.Authorization = `Bearer ${token}`;
   }
-  
+
   if (includeContentType) {
     headers['Content-Type'] = 'application/json';
   }
-  
+
   return headers;
 }

@@ -19,9 +19,7 @@ jest.mock('@/hooks/useEntryExists', () => ({
 
 // Mock next/link
 jest.mock('next/link', () => {
-  return ({ children, href }: { children: React.ReactNode; href: string }) => (
-    <a href={href}>{children}</a>
-  );
+  return ({ children, href }: { children: React.ReactNode; href: string }) => <a href={href}>{children}</a>;
 });
 
 // Mock dateUtils
@@ -46,7 +44,7 @@ describe('NewReflection', () => {
 
   it('should render the new reflection form', () => {
     render(<NewReflection />);
-    
+
     expect(screen.getByText('Daily Reflection')).toBeInTheDocument();
     expect(screen.getByText('Take a moment to reflect on your day')).toBeInTheDocument();
     expect(screen.getByText('🌹 Your Rose')).toBeInTheDocument();
@@ -55,13 +53,13 @@ describe('NewReflection', () => {
 
   it('should allow navigation between steps', () => {
     render(<NewReflection />);
-    
+
     // Should start on first step
     expect(screen.getByText('🌹 Your Rose')).toBeInTheDocument();
-    
+
     // Click next button
     fireEvent.click(screen.getByText('Next'));
-    
+
     // Should be on second step
     expect(screen.getByText('🌿 Your Thorn')).toBeInTheDocument();
     expect(screen.getAllByText('What was challenging today?')).toHaveLength(2); // subtitle and label
@@ -69,11 +67,11 @@ describe('NewReflection', () => {
 
   it('should allow date selection', () => {
     render(<NewReflection />);
-    
+
     const dateInput = screen.getByLabelText('Select date for this reflection:');
     expect(dateInput).toBeInTheDocument();
     expect(dateInput).toHaveValue('2025-07-21');
-    
+
     // Change date
     fireEvent.change(dateInput, { target: { value: '2025-07-20' } });
     expect(dateInput).toHaveValue('2025-07-20');
@@ -81,11 +79,11 @@ describe('NewReflection', () => {
 
   it('should show the final step with complete button', () => {
     render(<NewReflection />);
-    
+
     // Navigate to final step
     fireEvent.click(screen.getByText('Next')); // To thorn
     fireEvent.click(screen.getByText('Next')); // To bud
-    
+
     expect(screen.getByText('🌸 Your Bud')).toBeInTheDocument();
     expect(screen.getByText('Complete Reflection')).toBeInTheDocument();
   });
