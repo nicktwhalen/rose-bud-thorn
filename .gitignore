@@ -1,0 +1,14 @@
+.claude
+CLAUDE.md
+.vscode
+node_modules
+
+backend/.env
+backend/dist
+backend/node_modules
+backend/uploads
+
+frontend/.env.local
+frontend/.next
+frontend/.swc
+frontend/node_modules

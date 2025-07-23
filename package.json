@@ -1,0 +1,25 @@
+{
+  "name": "rose-bud-thorn",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "dev": "concurrently \"yarn backend:dev\" \"yarn frontend:dev\"",
+    "backend:dev": "yarn workspace backend start:dev",
+    "frontend:dev": "yarn workspace frontend dev",
+    "build": "yarn workspace backend build && yarn workspace frontend build",
+    "test": "yarn workspace backend test && yarn workspace frontend test",
+    "test:all": "yarn workspace backend test && yarn workspace frontend test && yarn workspace backend test:e2e",
+    "test:watch": "concurrently \"yarn workspace backend test:watch\" \"yarn workspace frontend test:watch\"",
+    "db:up": "docker compose up -d",
+    "db:down": "docker compose down",
+    "migration:run": "yarn workspace backend migration:run",
+    "migration:show": "yarn workspace backend migration:show"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
