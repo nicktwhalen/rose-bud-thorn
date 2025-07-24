@@ -196,7 +196,7 @@ export default function NewReflection() {
                     <button
                       key={index}
                       onClick={() => setCurrentStep(index)}
-                      disabled={entryExists}
+                      disabled={entryExists ?? false}
                       className={`w-6 h-6 md:w-3 md:h-3 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 touch-manipulation ${
                         entryExists ? 'bg-gray-200 cursor-not-allowed' : index === currentStep ? 'bg-purple-500' : index < currentStep ? 'bg-purple-300' : 'bg-gray-200'
                       }`}
@@ -224,7 +224,7 @@ export default function NewReflection() {
                   onChange={(e) => handleInputChange(e.target.value)}
                   onKeyDown={handleTextareaKeyDown}
                   placeholder={entryExists ? 'Please change the date above to create a new reflection' : currentStepData.placeholder}
-                  disabled={entryExists}
+                  disabled={entryExists ?? false}
                   className={`w-full h-32 md:h-32 p-4 border-none rounded-2xl resize-none text-base touch-manipulation ${
                     entryExists ? 'bg-gray-100 text-gray-400 placeholder-gray-400 cursor-not-allowed' : 'bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-purple-300 text-gray-700 placeholder-gray-400'
                   }`}
@@ -238,7 +238,7 @@ export default function NewReflection() {
               <div className="flex justify-between items-center">
                 <button
                   onClick={handlePrevious}
-                  disabled={currentStep === 0 || entryExists}
+                  disabled={currentStep === 0 || (entryExists ?? false)}
                   className={`px-6 py-4 md:py-3 rounded-full font-medium transition-all focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 touch-manipulation min-h-[48px] ${
                     currentStep === 0 || entryExists ? 'text-gray-400 cursor-not-allowed' : 'text-purple-600 hover:bg-purple-50 active:bg-purple-100'
                   }`}
@@ -250,7 +250,7 @@ export default function NewReflection() {
                 {currentStep < steps.length - 1 ? (
                   <button
                     onClick={handleNext}
-                    disabled={entryExists}
+                    disabled={entryExists ?? false}
                     className={`px-8 py-4 md:py-3 rounded-full font-medium transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 touch-manipulation min-h-[48px] ${
                       entryExists ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600 active:from-purple-700 active:to-pink-700 focus:ring-purple-500'
                     }`}
@@ -262,7 +262,7 @@ export default function NewReflection() {
                   <div className="flex flex-col items-end">
                     <button
                       onClick={handleSubmit}
-                      disabled={!hasAtLeastOneField() || entryExists}
+                      disabled={!hasAtLeastOneField() || (entryExists ?? false)}
                       className={`px-8 py-4 md:py-3 rounded-full font-medium transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 touch-manipulation min-h-[48px] ${
                         hasAtLeastOneField() && !entryExists
                           ? 'bg-gradient-to-r from-green-500 to-blue-500 text-white hover:from-green-600 hover:to-blue-600 active:from-green-700 active:to-blue-700 focus:ring-green-500'

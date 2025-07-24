@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 
-export default function UserHeader(): JSX.Element | null {
+export default function UserHeader() {
   const { user, logout, isAuthenticated } = useAuth();
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
 
