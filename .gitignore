@@ -9,6 +9,7 @@ backend/node_modules
 backend/uploads
 
 frontend/.env.local
+frontend/.env.production
 frontend/.next
 frontend/.swc
 frontend/node_modules
