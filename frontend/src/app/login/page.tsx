@@ -15,7 +15,9 @@ export default function LoginPage() {
   }, [isAuthenticated]);
 
   const handleGoogleLogin = (): void => {
-    window.location.href = API_ENDPOINTS.auth.google;
+    const currentOrigin = window.location.origin;
+    const googleAuthUrl = `${API_ENDPOINTS.auth.google}?frontend_url=${encodeURIComponent(currentOrigin)}`;
+    window.location.href = googleAuthUrl;
   };
 
   return (

@@ -13,16 +13,35 @@ export class AuthController {
   @UseGuards(AuthGuard('google'))
   async googleAuth(@Req() req: Request): Promise<void> {
     // This endpoint initiates the Google OAuth flow
+    // frontend_url will be preserved through OAuth state parameter
   }
 
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
   async googleAuthRedirect(@Req() req: Request, @Res() res: Response): Promise<void> {
-    const user = req.user as User;
+    const user = req.user as User & { frontendUrl?: string };
     const loginResponse: LoginResponse = await this.authService.login(user);
 
-    // Redirect to frontend with token
-    const frontendUrl = process.env.FRONTEND_URL;
+    // Get potential frontend URL from OAuth state or query param
+    const requestedFrontendUrl = user.frontendUrl || (req.query.frontend_url as string);
+
+    // Validate frontend URL against whitelist for security
+    const allowedOrigins = [process.env.FRONTEND_URL].filter(Boolean);
+
+    let frontendUrl = process.env.FRONTEND_URL; // default fallback
+
+    if (requestedFrontendUrl) {
+      try {
+        const url = new URL(requestedFrontendUrl);
+        const origin = url.origin;
+        if (allowedOrigins.includes(origin)) {
+          frontendUrl = origin;
+        }
+      } catch (error) {
+        // Invalid URL, use default
+      }
+    }
+
     const redirectUrl = `${frontendUrl}/auth/callback?token=${loginResponse.access_token}`;
     res.redirect(redirectUrl);
   }
