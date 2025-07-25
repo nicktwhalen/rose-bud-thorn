@@ -123,3 +123,28 @@ docker compose exec redis redis-cli get "entry:2025-07-20"
 # Monitor Redis operations in real-time
 docker compose exec redis redis-cli monitor
 ```
+
+## Bulk Upload Script
+
+Upload multiple entries from a CSV file:
+
+```bash
+cd backend
+npx ts-node --project tsconfig.json ../scripts/bulk_upload.ts <csv_file_path> <auth_token>
+```
+
+**CSV Format:**
+
+```csv
+date,rose,thorn,bud
+2024-01-15,"Great presentation","Long commute","Weekend trip"
+2024-01-16,"Sunny weather","","Movie night"
+```
+
+**Getting the Auth Token:**
+
+1. Log in to the frontend application at http://localhost:3000
+2. Open browser developer tools (F12)
+3. Go to Application/Storage → Local Storage → http://localhost:3000
+4. Find the `token` key and copy its value (should start with "eyJ...")
+5. Use this complete token string as the auth_token parameter

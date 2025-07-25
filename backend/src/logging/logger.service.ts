@@ -25,25 +25,31 @@ export class AppLogger implements LoggerService {
   }
 
   log(message: string, context?: LogContext): void {
-    console.log(this.formatLog('info', message, context));
+    if (process.env.NODE_ENV !== 'test') {
+      console.log(this.formatLog('info', message, context));
+    }
   }
 
   error(message: string, error?: string, context?: LogContext): void {
-    console.error(this.formatLog('error', message, { ...context, error }));
+    if (process.env.NODE_ENV !== 'test') {
+      console.error(this.formatLog('error', message, { ...context, error }));
+    }
   }
 
   warn(message: string, context?: LogContext): void {
-    console.warn(this.formatLog('warn', message, context));
+    if (process.env.NODE_ENV !== 'test') {
+      console.warn(this.formatLog('warn', message, context));
+    }
   }
 
   debug(message: string, context?: LogContext): void {
-    if (process.env.NODE_ENV !== 'production') {
+    if (process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test') {
       console.debug(this.formatLog('debug', message, context));
     }
   }
 
   verbose(message: string, context?: LogContext): void {
-    if (process.env.NODE_ENV !== 'production') {
+    if (process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test') {
       console.log(this.formatLog('verbose', message, context));
     }
   }
