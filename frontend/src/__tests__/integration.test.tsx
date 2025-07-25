@@ -116,6 +116,7 @@ describe('Integration Tests', () => {
           headers: {
             Authorization: 'Bearer test-jwt-token',
             'Content-Type': 'application/json',
+            'ngrok-skip-browser-warning': 'true',
           },
           body: expect.stringContaining('"rose":"Great weather"'),
         }),

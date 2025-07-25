@@ -35,7 +35,9 @@ describe('useEntryExists', () => {
 
     expect(result.current.exists).toBe(true);
     expect(mockFetch).toHaveBeenCalledWith('http://localhost:3001/api/entries/2025-07-18', {
-      headers: {},
+      headers: {
+        'ngrok-skip-browser-warning': 'true',
+      },
       signal: expect.any(AbortSignal),
     });
   });
@@ -87,11 +89,15 @@ describe('useEntryExists', () => {
 
     expect(mockFetch).toHaveBeenCalledTimes(2);
     expect(mockFetch).toHaveBeenNthCalledWith(1, 'http://localhost:3001/api/entries/2025-07-18', {
-      headers: {},
+      headers: {
+        'ngrok-skip-browser-warning': 'true',
+      },
       signal: expect.any(AbortSignal),
     });
     expect(mockFetch).toHaveBeenNthCalledWith(2, 'http://localhost:3001/api/entries/2025-07-19', {
-      headers: {},
+      headers: {
+        'ngrok-skip-browser-warning': 'true',
+      },
       signal: expect.any(AbortSignal),
     });
   });

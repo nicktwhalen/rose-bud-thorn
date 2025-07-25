@@ -146,6 +146,7 @@ describe('AuthCallbackPage', () => {
         headers: {
           Authorization: `Bearer ${mockToken}`,
           'Content-Type': 'application/json',
+          'ngrok-skip-browser-warning': 'true',
         },
       }),
     );

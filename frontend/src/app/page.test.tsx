@@ -147,6 +147,7 @@ describe('Home Page', () => {
         headers: {
           Authorization: 'Bearer test-jwt-token',
           'Content-Type': 'application/json',
+          'ngrok-skip-browser-warning': 'true',
         },
         body: expect.stringContaining(`"date":"${getLocalDateString()}"`),
       });

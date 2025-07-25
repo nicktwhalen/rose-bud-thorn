@@ -36,5 +36,8 @@ export function getAuthHeaders(includeContentType = false): Record<string, strin
     headers['Content-Type'] = 'application/json';
   }
 
+  // Add ngrok bypass header for development
+  headers['ngrok-skip-browser-warning'] = 'true';
+
   return headers;
 }
