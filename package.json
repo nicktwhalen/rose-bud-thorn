@@ -20,7 +20,8 @@
     "migration:show": "yarn workspace backend migration:show",
     "prepare": "husky",
     "check-format": "prettier --check '**/*.ts' '**/*.tsx'",
-    "format": "prettier --write '**/*.ts' '**/*.tsx'"
+    "format": "prettier --write '**/*.ts' '**/*.tsx'",
+    "clean": "yarn workspace backend clean && yarn workspace frontend clean && rm -rf node_modules yarn.lock && yarn cache clean"
   },
   "lint-staged": {
     "**/*.ts": "prettier --write --ignore-unknown",
