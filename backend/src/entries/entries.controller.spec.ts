@@ -4,6 +4,7 @@ import { EntriesService } from './entries.service';
 import { CreateEntryDto } from './dto/create-entry.dto';
 import { UpdateEntryDto } from './dto/update-entry.dto';
 import { User } from '../auth/entities/user.entity';
+import { AuditService } from '../audit/audit.service';
 
 describe('EntriesController', () => {
   let controller: EntriesController;
@@ -22,6 +23,8 @@ describe('EntriesController', () => {
 
   const mockRequest = {
     user: mockUser,
+    clientIp: '127.0.0.1',
+    get: jest.fn().mockReturnValue('test-user-agent'),
   } as any;
 
   const mockEntriesService = {
@@ -33,6 +36,12 @@ describe('EntriesController', () => {
     remove: jest.fn(),
   };
 
+  const mockAuditService = {
+    logCreateEntry: jest.fn(),
+    logUpdateEntry: jest.fn(),
+    logDeleteEntry: jest.fn(),
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [EntriesController],
@@ -40,6 +49,10 @@ describe('EntriesController', () => {
         {
           provide: EntriesService,
           useValue: mockEntriesService,
+        },
+        {
+          provide: AuditService,
+          useValue: mockAuditService,
         },
       ],
     }).compile();

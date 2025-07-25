@@ -5,28 +5,43 @@ import { CreateEntryDto, validateAtLeastOneField } from './dto/create-entry.dto'
 import { UpdateEntryDto, validateAtLeastOneFieldUpdate } from './dto/update-entry.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { User } from '../auth/entities/user.entity';
+import { AuditService } from '../audit/audit.service';
+import { RequestWithIp } from '../audit/ip-extractor.middleware';
 
 @Controller('api/entries')
 @UseGuards(JwtAuthGuard)
 export class EntriesController {
-  constructor(private readonly entriesService: EntriesService) {}
+  constructor(
+    private readonly entriesService: EntriesService,
+    private readonly auditService: AuditService,
+  ) {}
 
   @Post()
-  create(@Body() createEntryDto: CreateEntryDto, @Req() req: Request) {
+  async create(@Body() createEntryDto: CreateEntryDto, @Req() req: RequestWithIp) {
     if (!validateAtLeastOneField(createEntryDto)) {
       throw new BadRequestException('At least one field (rose, thorn, or bud) must have a value');
     }
     const user = req.user as User;
-    return this.entriesService.create(createEntryDto, user.id);
+    const result = await this.entriesService.create(createEntryDto, user.id);
+
+    // Log entry creation
+    await this.auditService.logCreateEntry(user, createEntryDto.date, req.clientIp || 'unknown', req.get('user-agent'));
+
+    return result;
   }
 
   @Post('upsert')
-  createOrUpdate(@Body() createEntryDto: CreateEntryDto, @Req() req: Request) {
+  async createOrUpdate(@Body() createEntryDto: CreateEntryDto, @Req() req: RequestWithIp) {
     if (!validateAtLeastOneField(createEntryDto)) {
       throw new BadRequestException('At least one field (rose, thorn, or bud) must have a value');
     }
     const user = req.user as User;
-    return this.entriesService.createOrUpdate(createEntryDto, user.id);
+    const result = await this.entriesService.createOrUpdate(createEntryDto, user.id);
+
+    // Log entry creation or update (upsert operation)
+    await this.auditService.logCreateEntry(user, createEntryDto.date, req.clientIp || 'unknown', req.get('user-agent'));
+
+    return result;
   }
 
   @Get()
@@ -42,17 +57,27 @@ export class EntriesController {
   }
 
   @Patch(':date')
-  update(@Param('date') date: string, @Body() updateEntryDto: UpdateEntryDto, @Req() req: Request) {
+  async update(@Param('date') date: string, @Body() updateEntryDto: UpdateEntryDto, @Req() req: RequestWithIp) {
     if (!validateAtLeastOneFieldUpdate(updateEntryDto)) {
       throw new BadRequestException('At least one field (rose, thorn, or bud) must have a value');
     }
     const user = req.user as User;
-    return this.entriesService.update(date, updateEntryDto, user.id);
+    const result = await this.entriesService.update(date, updateEntryDto, user.id);
+
+    // Log entry update
+    await this.auditService.logUpdateEntry(user, date, req.clientIp || 'unknown', req.get('user-agent'), updateEntryDto);
+
+    return result;
   }
 
   @Delete(':date')
-  remove(@Param('date') date: string, @Req() req: Request) {
+  async remove(@Param('date') date: string, @Req() req: RequestWithIp) {
     const user = req.user as User;
-    return this.entriesService.remove(date, user.id);
+    const result = await this.entriesService.remove(date, user.id);
+
+    // Log entry deletion
+    await this.auditService.logDeleteEntry(user, date, req.clientIp || 'unknown', req.get('user-agent'));
+
+    return result;
   }
 }

@@ -7,7 +7,7 @@ interface AuthContextType {
   user: AuthUser | null;
   loading: boolean;
   login: (token: string, user: AuthUser) => void;
-  logout: () => void;
+  logout: () => Promise<void>;
   isAuthenticated: boolean;
 }
 
@@ -46,12 +46,31 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setUser(userData);
   }, []);
 
-  const logout = useCallback((): void => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    setUser(null);
-    // Redirect to login page
-    window.location.href = '/login';
+  const logout = useCallback(async (): Promise<void> => {
+    try {
+      // Call backend logout endpoint for audit logging
+      const token = localStorage.getItem('token');
+      if (token) {
+        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+            'ngrok-skip-browser-warning': 'true',
+          },
+        });
+      }
+    } catch (error) {
+      console.error('Error during logout:', error);
+      // Continue with local logout even if backend call fails
+    } finally {
+      // Always clear local storage and redirect
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      setUser(null);
+      // Redirect to login page
+      window.location.href = '/login';
+    }
   }, []);
 
   const value: AuthContextType = {

@@ -17,8 +17,7 @@ export default function UserHeader() {
       await logout();
     } catch (error) {
       console.error('Logout error:', error);
-      // Still logout locally even if API call fails
-      logout();
+      // Logout function already handles errors and clears local storage
     }
   };
 

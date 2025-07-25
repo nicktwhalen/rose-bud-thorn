@@ -8,6 +8,7 @@ import { Client } from 'pg';
 import { AppModule } from '../src/app.module';
 import { Entry } from '../src/entries/entities/entry.entity';
 import { User } from '../src/auth/entities/user.entity';
+import { AuditLog } from '../src/audit/entities/audit-log.entity';
 import { v4 as uuidv4 } from 'uuid';
 
 async function createTestDatabaseIfNotExists() {
@@ -62,7 +63,7 @@ describe('EntriesController (e2e)', () => {
           username: 'postgres',
           password: 'postgres',
           database: 'rose_bud_thorn_test',
-          entities: [Entry, User],
+          entities: [Entry, User, AuditLog],
           synchronize: true,
           dropSchema: true,
         }),
