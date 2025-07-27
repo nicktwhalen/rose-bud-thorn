@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "name": "rose-bud-thorn-backend",
+  "name": "rose-bud-thorn-api",
   "builds": [
     {
       "src": "src/serverless.ts",
@@ -10,14 +10,17 @@
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "/src/serverless.ts",
-      "methods": ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"]
+      "dest": "/src/serverless.ts"
     }
   ],
   "env": {
     "NODE_ENV": "production"
   },
-  "installCommand": "yarn install",
-  "buildCommand": "yarn build",
-  "outputDirectory": "dist"
+  "functions": {
+    "src/serverless.ts": {
+      "maxDuration": 30
+    }
+  },
+  "installCommand": "yarn install --frozen-lockfile",
+  "buildCommand": "yarn build"
 }
