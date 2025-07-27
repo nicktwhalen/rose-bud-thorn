@@ -16,7 +16,7 @@ export class AuthController {
 
   @Get('google')
   @UseGuards(AuthGuard('google'))
-  async googleAuth(@Req() req: Request): Promise<void> {
+  async googleAuth(@Req() req: RequestWithIp): Promise<void> {
     // This endpoint initiates the Google OAuth flow
     // frontend_url will be preserved through OAuth state parameter
   }

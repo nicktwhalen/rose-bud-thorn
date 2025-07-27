@@ -45,13 +45,13 @@ export class EntriesController {
   }
 
   @Get()
-  findAll(@Req() req: Request, @Query('limit') limit?: number, @Query('offset') offset?: number) {
+  findAll(@Req() req: RequestWithIp, @Query('limit') limit?: number, @Query('offset') offset?: number) {
     const user = req.user as User;
     return this.entriesService.findAll(user.id, limit, offset);
   }
 
   @Get(':date')
-  findOne(@Param('date') date: string, @Req() req: Request) {
+  findOne(@Param('date') date: string, @Req() req: RequestWithIp) {
     const user = req.user as User;
     return this.entriesService.findOne(date, user.id);
   }
