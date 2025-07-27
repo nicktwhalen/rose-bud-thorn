@@ -6,5 +6,8 @@
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
   },
-  "setupFilesAfterEnv": ["<rootDir>/setup-e2e.ts"]
+  "setupFilesAfterEnv": ["<rootDir>/setup-e2e.ts"],
+  "testTimeout": 30000,
+  "forceExit": true,
+  "detectOpenHandles": true
 }

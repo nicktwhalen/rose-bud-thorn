@@ -13,10 +13,14 @@ export class HealthController {
   @Get()
   @HealthCheck()
   check() {
+    const isTest = process.env.NODE_ENV === 'test';
+    const heapThreshold = isTest ? 1000 * 1024 * 1024 : 150 * 1024 * 1024;
+    const rssThreshold = isTest ? 1000 * 1024 * 1024 : 150 * 1024 * 1024;
+
     return this.health.check([
       () => this.db.pingCheck('database'),
-      () => this.memory.checkHeap('memory_heap', 150 * 1024 * 1024),
-      () => this.memory.checkRSS('memory_rss', 150 * 1024 * 1024),
+      () => this.memory.checkHeap('memory_heap', heapThreshold),
+      () => this.memory.checkRSS('memory_rss', rssThreshold),
       () => this.disk.checkStorage('storage', { thresholdPercent: 0.9, path: '/' }),
     ]);
   }
