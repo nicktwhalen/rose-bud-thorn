@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 
 export interface RequestWithIp extends Request {
   clientIp?: string;
+  user?: any;
 }
 
 @Injectable()

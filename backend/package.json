@@ -46,11 +46,11 @@
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.2",
     "typeorm": "^0.3.25",
-    "@nestjs/cli": "^11.0.7"
+    "@nestjs/cli": "^11.0.7",
+    "@types/express": "^4.17.21"
   },
   "devDependencies": {
     "@nestjs/testing": "^11.1.5",
-    "@types/express": "^4.17.21",
     "@types/jest": "^30.0.0",
     "@types/node": "^24.0.14",
     "@types/passport-google-oauth20": "^2.0.16",
