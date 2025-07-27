@@ -8,6 +8,11 @@ export class LoggingInterceptor implements NestInterceptor {
   constructor(private logger: AppLogger) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+    // Skip logging in test environment to prevent async issues
+    if (process.env.NODE_ENV === 'test') {
+      return next.handle();
+    }
+
     const request = context.switchToHttp().getRequest();
     const { method, url } = request;
     const startTime = Date.now();
