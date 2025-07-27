@@ -166,7 +166,7 @@ describe('EntriesService', () => {
     });
 
     it('should use default pagination values', async () => {
-      const entries = [];
+      const entries: any[] = [];
       const total = 0;
 
       mockRepository.findAndCount.mockResolvedValue([entries, total]);

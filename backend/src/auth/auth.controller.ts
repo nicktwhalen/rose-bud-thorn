@@ -56,7 +56,7 @@ export class AuthController {
 
   @Get('profile')
   @UseGuards(AuthGuard('jwt'))
-  async getProfile(@Req() req: Request): Promise<User> {
+  async getProfile(@Req() req: RequestWithIp): Promise<User> {
     return req.user as User;
   }
 

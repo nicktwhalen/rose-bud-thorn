@@ -25,7 +25,7 @@ export class EntriesController {
     const result = await this.entriesService.create(createEntryDto, user.id);
 
     // Log entry creation
-    await this.auditService.logCreateEntry(user, createEntryDto.date, req.clientIp || 'unknown', req.get('user-agent'));
+    await this.auditService.logCreateEntry(user, createEntryDto.date, req.clientIp || 'unknown', req.get('user-agent') || 'unknown');
 
     return result;
   }
@@ -39,7 +39,7 @@ export class EntriesController {
     const result = await this.entriesService.createOrUpdate(createEntryDto, user.id);
 
     // Log entry creation or update (upsert operation)
-    await this.auditService.logCreateEntry(user, createEntryDto.date, req.clientIp || 'unknown', req.get('user-agent'));
+    await this.auditService.logCreateEntry(user, createEntryDto.date, req.clientIp || 'unknown', req.get('user-agent') || 'unknown');
 
     return result;
   }
