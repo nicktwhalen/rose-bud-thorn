@@ -14,5 +14,6 @@ export default async (req: any, res: any) => {
     console.log('🔧 Serverless function initialized');
   }
 
+  // Use the Express app as a request handler
   return cachedServer(req, res);
 };
