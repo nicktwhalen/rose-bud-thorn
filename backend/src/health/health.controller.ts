@@ -13,15 +13,10 @@ export class HealthController {
   @Get()
   @HealthCheck()
   check() {
-    // Use higher memory thresholds for test environments
-    const isTest = process.env.NODE_ENV === 'test';
-    const heapThreshold = isTest ? 1000 * 1024 * 1024 : 150 * 1024 * 1024; // 1GB for tests, 150MB for prod
-    const rssThreshold = isTest ? 1000 * 1024 * 1024 : 150 * 1024 * 1024;
-
     return this.health.check([
       () => this.db.pingCheck('database'),
-      () => this.memory.checkHeap('memory_heap', heapThreshold),
-      () => this.memory.checkRSS('memory_rss', rssThreshold),
+      () => this.memory.checkHeap('memory_heap', 150 * 1024 * 1024),
+      () => this.memory.checkRSS('memory_rss', 150 * 1024 * 1024),
       () => this.disk.checkStorage('storage', { thresholdPercent: 0.9, path: '/' }),
     ]);
   }
@@ -35,9 +30,6 @@ export class HealthController {
   @Get('/live')
   @HealthCheck()
   liveness() {
-    const isTest = process.env.NODE_ENV === 'test';
-    const heapThreshold = isTest ? 1000 * 1024 * 1024 : 200 * 1024 * 1024;
-
-    return this.health.check([() => this.memory.checkHeap('memory_heap', heapThreshold)]);
+    return this.health.check([() => this.memory.checkHeap('memory_heap', 200 * 1024 * 1024)]);
   }
 }

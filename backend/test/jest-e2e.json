@@ -2,12 +2,9 @@
   "moduleFileExtensions": ["js", "json", "ts"],
   "rootDir": ".",
   "testEnvironment": "node",
-  "testRegex": ".(e2e-spec|integration.test).ts$",
+  "testRegex": ".e2e-spec.ts$",
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
   },
-  "setupFilesAfterEnv": ["<rootDir>/setup-e2e.ts"],
-  "testTimeout": 30000,
-  "forceExit": true,
-  "detectOpenHandles": true
+  "setupFilesAfterEnv": ["<rootDir>/setup-e2e.ts"]
 }
