@@ -1,5 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { HealthCheckService, HealthCheck, TypeOrmHealthIndicator, MemoryHealthIndicator, DiskHealthIndicator } from '@nestjs/terminus';
+import { env } from '../utils/environment';
 
 @Controller('health')
 export class HealthController {
@@ -13,9 +14,9 @@ export class HealthController {
   @Get()
   @HealthCheck()
   check() {
-    const isTest = process.env.NODE_ENV === 'test';
-    const heapThreshold = isTest ? 1000 * 1024 * 1024 : 150 * 1024 * 1024;
-    const rssThreshold = isTest ? 1000 * 1024 * 1024 : 150 * 1024 * 1024;
+    // Use higher memory thresholds for test environment to prevent false failures
+    const heapThreshold = env.isTest ? 1000 * 1024 * 1024 : 150 * 1024 * 1024;
+    const rssThreshold = env.isTest ? 1000 * 1024 * 1024 : 150 * 1024 * 1024;
 
     return this.health.check([
       () => this.db.pingCheck('database'),

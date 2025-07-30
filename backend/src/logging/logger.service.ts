@@ -1,4 +1,5 @@
 import { Injectable, LoggerService } from '@nestjs/common';
+import { env } from '../utils/environment';
 
 interface LogContext {
   method?: string;
@@ -25,31 +26,31 @@ export class AppLogger implements LoggerService {
   }
 
   log(message: string, context?: LogContext): void {
-    if (process.env.NODE_ENV !== 'test') {
+    if (!env.shouldSuppressLogging) {
       console.log(this.formatLog('info', message, context));
     }
   }
 
   error(message: string, error?: string, context?: LogContext): void {
-    if (process.env.NODE_ENV !== 'test') {
+    if (!env.shouldSuppressLogging) {
       console.error(this.formatLog('error', message, { ...context, error }));
     }
   }
 
   warn(message: string, context?: LogContext): void {
-    if (process.env.NODE_ENV !== 'test') {
+    if (!env.shouldSuppressLogging) {
       console.warn(this.formatLog('warn', message, context));
     }
   }
 
   debug(message: string, context?: LogContext): void {
-    if (process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test') {
+    if (env.shouldEnableVerboseLogging) {
       console.debug(this.formatLog('debug', message, context));
     }
   }
 
   verbose(message: string, context?: LogContext): void {
-    if (process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test') {
+    if (env.shouldEnableVerboseLogging) {
       console.log(this.formatLog('verbose', message, context));
     }
   }
