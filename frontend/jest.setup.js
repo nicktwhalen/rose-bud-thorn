@@ -6,11 +6,13 @@ global.fetch = jest.fn()
 // Mock window.alert
 global.alert = jest.fn()
 
+
 // Mock console methods to reduce test output noise  
 const originalError = console.error
 const originalWarn = console.warn
 
 beforeEach(() => {
+  
   // Suppress common test errors and jsdom limitations
   jest.spyOn(console, 'error').mockImplementation((...args) => {
     const message = args[0]?.toString() || ''
