@@ -8,6 +8,8 @@ export enum AuditAction {
   CREATE_ENTRY = 'CREATE_ENTRY',
   UPDATE_ENTRY = 'UPDATE_ENTRY',
   DELETE_ENTRY = 'DELETE_ENTRY',
+  VIEW_ENTRY = 'VIEW_ENTRY',
+  VIEW_ENTRIES = 'VIEW_ENTRIES',
 }
 
 @Entity('audit_logs')

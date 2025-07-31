@@ -45,15 +45,29 @@ export class EntriesController {
   }
 
   @Get()
-  findAll(@Req() req: RequestWithIp, @Query('limit') limit?: number, @Query('offset') offset?: number) {
+  async findAll(@Req() req: RequestWithIp, @Query('limit') limit?: number, @Query('offset') offset?: number) {
     const user = req.user as User;
-    return this.entriesService.findAll(user.id, limit, offset);
+    const result = await this.entriesService.findAll(user.id, limit, offset);
+
+    // Log viewing entries list
+    await this.auditService.logViewEntries(user, req.clientIp || 'unknown', req.get('user-agent') || 'unknown', {
+      limit,
+      offset,
+      totalReturned: result.entries.length,
+    });
+
+    return result;
   }
 
   @Get(':date')
-  findOne(@Param('date') date: string, @Req() req: RequestWithIp) {
+  async findOne(@Param('date') date: string, @Req() req: RequestWithIp) {
     const user = req.user as User;
-    return this.entriesService.findOne(date, user.id);
+    const result = await this.entriesService.findOne(date, user.id);
+
+    // Log viewing specific entry
+    await this.auditService.logViewEntry(user, date, req.clientIp || 'unknown', req.get('user-agent') || 'unknown');
+
+    return result;
   }
 
   @Patch(':date')

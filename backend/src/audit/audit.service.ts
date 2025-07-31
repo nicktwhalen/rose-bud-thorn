@@ -128,4 +128,35 @@ export class AuditService {
       },
     });
   }
+
+  /**
+   * Log viewing a specific entry
+   */
+  async logViewEntry(user: User, entryDate: string, ipAddress: string, userAgent?: string): Promise<AuditLog> {
+    return this.log({
+      user,
+      action: AuditAction.VIEW_ENTRY,
+      ipAddress,
+      userAgent,
+      resourceId: entryDate,
+      details: {
+        entryDate,
+      },
+    });
+  }
+
+  /**
+   * Log viewing entries list
+   */
+  async logViewEntries(user: User, ipAddress: string, userAgent?: string, pagination?: { limit?: number; offset?: number; totalReturned?: number }): Promise<AuditLog> {
+    return this.log({
+      user,
+      action: AuditAction.VIEW_ENTRIES,
+      ipAddress,
+      userAgent,
+      details: {
+        pagination,
+      },
+    });
+  }
 }

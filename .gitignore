@@ -5,6 +5,7 @@ node_modules
 
 backend/.env*
 !backend/.env.example
+backend/coverage
 backend/dist
 backend/node_modules
 backend/uploads
@@ -13,4 +14,5 @@ frontend/.env*
 !frontend/.env.local.example
 frontend/.next
 frontend/.swc
+frontend/coverage
 frontend/node_modules

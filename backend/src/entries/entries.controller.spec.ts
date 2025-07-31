@@ -40,6 +40,8 @@ describe('EntriesController', () => {
     logCreateEntry: jest.fn(),
     logUpdateEntry: jest.fn(),
     logDeleteEntry: jest.fn(),
+    logViewEntry: jest.fn(),
+    logViewEntries: jest.fn(),
   };
 
   beforeEach(async () => {
